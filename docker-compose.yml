@@ -1,0 +1,34 @@
+version: '3'
+services:
+  db:
+    container_name: lbl-k8s-mysql
+    image: mysql:5.7
+    networks:
+      - mamaslocalnet
+    environment:
+      MYSQL_DATABASE: nssfdb
+      MYSQL_USER: nssfusr
+      MYSQL_PASSWORD: nssfpasswd
+      MYSQL_ROOT_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./others/volumes/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysql" ,"-h", "mysql", "-P", "3306", "-u", "root", "-e", "SELECT 1", "cache"]
+      interval: 20ss
+      timeout: 5s
+      retries: 5
+#  keycloak:
+#    container_name: keycloak
+#    image: jboss/keycloak:10.0.1
+#    networks:
+#      - mamaslocalnet
+#    ports:
+#      - "38092:8081"
+#    environment:
+#      KEYCLOAK_USER: 'admin'
+#      KEYCLOAK_PASSWORD: 'admin'
+networks:
+  mamaslocalnet:
+    driver: bridge

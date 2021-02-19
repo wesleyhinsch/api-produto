@@ -1,0 +1,25 @@
+management:
+  health:
+    probes:
+      enabled: true
+server:
+  port : 8091
+spring:
+  datasource:
+    #Local
+    url: jdbc:mysql://10.79.56.149:30006/nssfdb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: nssfusr
+    password: nssfpasswd
+    #Cluster
+    #url: jdbc:mysql://${MYSQL_SERVICE}/${MYSQL_DATABASE}
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #username: ${MYSQL_USER}
+    #password: ${MYSQL_PASSWORD}
+  jpa:
+    database: MYSQL
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: false
+  resources:
+    add-mappings: true
