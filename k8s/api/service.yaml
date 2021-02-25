@@ -14,4 +14,3 @@ spec:
       nodePort: 30091
   type: NodePort
   #type: ClusterIP
----

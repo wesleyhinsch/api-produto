@@ -65,4 +65,3 @@ spec:
           protocol: TCP
       imagePullSecrets:
         - name: api-produto
----
