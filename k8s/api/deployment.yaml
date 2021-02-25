@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-produto
+spec:
+  selector:
+    matchLabels:
+      name: lbl-api-produto
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: lbl-api-produto
+    spec:
+      containers:
+      - name: api-produto
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 400m
+          limits:
+            memory: 512Mi
+            cpu: 800m 
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8091
+          initialDelaySeconds: 25
+          periodSeconds: 2
+          timeoutSeconds: 2
+          #Informa quantas vezes uma falha deve ocorrer para a verificação ser considerada com falha e o pod da aplicação sofrer um restart ou não receber tráfego.
+          failureThreshold: 1
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8091
+          initialDelaySeconds: 25
+          timeoutSeconds: 2
+          periodSeconds: 3
+          failureThreshold: 1
+        image: wesleyhinsch/api-produto:v1.0.0
+        env:
+        - name: MYSQL_SERVICE
+          value: service-k8s-mysql
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: mysql-db-name
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: mysql-username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: mysql-password
+        imagePullPolicy: Always
+        ports:
+        - name: api-produto
+          containerPort: 8091
+          protocol: TCP
+      imagePullSecrets:
+        - name: api-produto
